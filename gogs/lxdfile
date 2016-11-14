@@ -1,0 +1,32 @@
+# Example usage:
+#
+#   lxc image copy images:ubuntu/yakkety/amd64 local: --copy-aliases --auto-update
+#   lxcfile build -f gogs.lxdfile gogs
+#   lxcfile launch gogs gogs
+#
+FROM ubuntu/yakkety/amd64
+DESCRIPTION Gogs - Go Git Service
+
+RUN apt-get install -y \
+    unattended-upgrades \
+    apt-listchanges
+
+RUN apt-get install -y \
+    ca-certificates \
+    curl \
+    git
+
+ENV TARBALL gogs_v0.9.97_linux_amd64.tar.gz
+ENV URL     https://cdn.gogs.io/$TARBALL
+
+CD /tmp
+RUN curl -OL "$URL" && \
+    tar -xvf "$TARBALL" -C /opt && \
+    rm "$TARBALL"
+
+VOLUME /opt/gogs/custom
+VOLUME /home/gogs
+
+RUN mkdir -p /home/gogs
+COPY gogs.service /etc/systemd/system/
+RUN systemctl enable gogs.service
