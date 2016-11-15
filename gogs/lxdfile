@@ -7,6 +7,7 @@
 FROM ubuntu/yakkety/amd64
 DESCRIPTION Gogs - Go Git Service
 
+# Dependencies
 RUN apt-get install -y \
     unattended-upgrades \
     apt-listchanges
@@ -14,8 +15,10 @@ RUN apt-get install -y \
 RUN apt-get install -y \
     ca-certificates \
     curl \
-    git
+    git \
+    openssh-server
 
+# Gogs
 ENV TARBALL gogs_v0.9.97_linux_amd64.tar.gz
 ENV URL     https://cdn.gogs.io/$TARBALL
 
@@ -23,10 +26,35 @@ CD /tmp
 RUN curl -OL "$URL" && \
     tar -xvf "$TARBALL" -C /opt && \
     rm "$TARBALL"
+RUN mkdir -p /opt/gogs/data
 
 VOLUME /opt/gogs/custom
-VOLUME /home/gogs
+VOLUME /opt/gogs/data
 
-RUN mkdir -p /home/gogs
+# User
+RUN mkdir -p /home/git
+VOLUME /home/git
+RUN adduser \
+    --shell /bin/bash \
+    --home /home/git \
+    --gecos "" \
+    --disabled-password \
+    git
+RUN chown -R git:git /home/git
+RUN chown -R git:git /opt/gogs
+
+# SSH
+RUN rm /etc/ssh/ssh_host_rsa_key /etc/ssh/ssh_host_rsa_key.pub
+RUN rm /etc/ssh/ssh_host_ecdsa_key /etc/ssh/ssh_host_ecdsa_key.pub
+RUN ssh-keygen -f /etc/ssh/ssh_host_rsa_key -t rsa -b 4096 -N ''
+RUN ssh-keygen -f /etc/ssh/ssh_host_ecdsa_key -t ecdsa -b 521 -N ''
+COPY sshd_config /etc/ssh/sshd_config
+RUN mkdir -p /var/run/sshd
+
+VOLUME /etc/ssh/
+
+# SystemD
 COPY gogs.service /etc/systemd/system/
+RUN systemctl daemon-reload
+RUN systemctl enable ssh.service
 RUN systemctl enable gogs.service

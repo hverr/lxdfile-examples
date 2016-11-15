@@ -3,7 +3,9 @@ Description=Gogs - Go Git Service
 After=network.target
 
 [Service]
-Environment=HOME=/home/gogs/
+User=git
+Group=git
+Environment=HOME=/home/git
 WorkingDirectory=/opt/gogs
 ExecStart=/opt/gogs/gogs web
 
