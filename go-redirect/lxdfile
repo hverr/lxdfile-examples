@@ -1,0 +1,16 @@
+FROM alpine/3.1
+DESCRIPTION go-redirect - HTTP to HTPS redirect
+
+# Dependencies
+RUN apk add \
+    ca-certificates \
+    curl
+
+# Install
+ENV URL https://github.com/hverr/go-redirect/releases/download/v2/go-redirect_v2_amd64
+RUN curl -L "$URL" -o /usr/local/bin/go-redirect && \
+    chmod 0755 /usr/local/bin/go-redirect
+
+# OpenRC
+COPY go-redirect /etc/init.d/go-redirect
+RUN rc-update add go-redirect default

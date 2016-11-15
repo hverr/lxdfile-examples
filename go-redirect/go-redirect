@@ -1,0 +1,27 @@
+#!/sbin/runscript
+
+name="go-redirect"
+
+start() {
+    ebegin "Starting go-redirect"
+    start-stop-daemon \
+        --background \
+        --start \
+        --exec /usr/local/bin/go-redirect \
+        --make-pidfile \
+        --pidfile /var/run/go-redirect.pid
+    eend $?
+}
+
+stop() {
+    ebegin "Stopping go-redirect"
+    start-stop-daemon --stop \
+        --exec /usr/local/bin/go-redirect \
+        --pidfile /var/run/go-redirect.pid
+    eend $?
+}
+
+depend() {
+    need net
+    need localmount
+}
