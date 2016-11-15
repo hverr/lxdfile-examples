@@ -1,0 +1,2 @@
+COPY sniproxy.conf /etc/sniproxy/sniproxy.conf
+RUN rc-service sniproxy restart
