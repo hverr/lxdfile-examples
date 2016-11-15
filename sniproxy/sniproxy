@@ -1,0 +1,30 @@
+#!/sbin/openrc-run
+
+name="sniproxy"
+
+start() {
+    ebegin "Starting sniproxy"
+    start-stop-daemon \
+        --background \
+        --start \
+        --exec /usr/sbin/sniproxy \
+        --make-pidfile \
+        --pidfile /var/run/sniproxy.pid \
+        -- \
+        -f -c /etc/sniproxy/sniproxy.conf
+    eend $?
+}
+
+stop() {
+    ebegin "Stopping sniproxy"
+    start-stop-daemon --stop \
+        --exec /usr/sbin/sniproxy \
+        --pidfile /var/run/sniproxy.pid
+    eend $?
+}
+
+depend() {
+    need net
+    need localmount
+    after firewall
+}

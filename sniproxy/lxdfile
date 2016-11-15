@@ -1,0 +1,14 @@
+FROM alpine/3.4
+DESCRIPTION sniproxy - HTTP and TLS proxy
+
+# Community repository
+RUN echo "http://dl-3.alpinelinux.org/alpine/v3.4/community" >> /etc/apk/repositories
+RUN apk update
+
+# Install
+RUN apk add sniproxy
+COPY sniproxy /etc/init.d/sniproxy
+VOLUME /etc/sniproxy/
+
+# OpenRC
+RUN rc-update add sniproxy default
