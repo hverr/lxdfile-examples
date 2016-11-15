@@ -1,9 +1,3 @@
-# Example usage:
-#
-#   lxc image copy images:ubuntu/yakkety/amd64 local: --copy-aliases --auto-update
-#   lxcfile build -f gogs.lxdfile gogs
-#   lxcfile launch gogs gogs
-#
 FROM ubuntu/yakkety/amd64
 DESCRIPTION Gogs - Go Git Service
 
