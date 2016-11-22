@@ -19,6 +19,10 @@ RUN curl -L "$URL" | tar -xzvf - caddy_linux_amd64 && \
 COPY caddy_config /etc/caddy_config
 COPY caddy_start /usr/local/bin/caddy_start
 
+# Volumes
+VOLUME /etc/caddy_config
+VOLUME /root/.caddy
+
 # OpenRC
 COPY caddy /etc/init.d/caddy
 RUN rc-update add caddy default
