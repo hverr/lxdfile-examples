@@ -1,0 +1,2 @@
+COPY caddy_config /etc/caddy_config
+RUN rc-service caddy restart

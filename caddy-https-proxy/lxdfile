@@ -1,0 +1,24 @@
+FROM alpine/3.4
+DESCRIPTION caddy - HTTPS forward proxy
+
+# Dependencies
+RUN apk add \
+    bash \
+    ca-certificates \
+    curl
+
+# Install
+ENV VERSION v0.9.3
+ENV TAR     caddy_linux_amd64.tar.gz
+ENV URL     https://github.com/mholt/caddy/releases/download/$VERSION/$TAR
+CD /root
+RUN curl -L "$URL" | tar -xzvf - caddy_linux_amd64 && \
+    mv caddy_linux_amd64 /usr/local/bin/caddy
+
+# Start script
+COPY caddy_config /etc/caddy_config
+COPY caddy_start /usr/local/bin/caddy_start
+
+# OpenRC
+COPY caddy /etc/init.d/caddy
+RUN rc-update add caddy default

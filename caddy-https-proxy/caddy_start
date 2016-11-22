@@ -1,0 +1,40 @@
+#!/bin/bash
+
+function die() {
+    echo error: "$0" "$@" >&2
+    exit 1
+}
+
+. /etc/caddy_config || exit 1
+
+[ -n "$EMAIL" ]   || die "EMAIL not set"
+[ -n "$HOST" ]    || die "HOST not set"
+[ -n "$BACKEND" ] || die "BACKEND not set"
+[ -n "$PORT" ]    || die "PORT not set"
+
+[ -n "$ENABLE_WWW" ] && L1="$HOST, www.$HOST" || L1="$HOST"
+
+cat > /etc/Caddyfile <<EOF
+$L1 {
+    proxy / $BACKEND:$PORT {
+        proxy_header Host {host}
+        proxy_header X-Real-IP {remote}
+        proxy_header X-Forwarded-Proto {scheme}
+    }
+}
+EOF
+
+echo "Starting caddy for $L1 ($EMAIL)"
+
+while true; do
+    if [ -n "$STAGING" ]; then
+        CA="https://acme-staging.api.letsencrypt.org/directory"
+        echo + caddy -conf=/etc/Caddyfile -agree=true -email="$EMAIL" -host="$HOST" -ca="$CA"
+        caddy -conf=/etc/Caddyfile -agree=true -email="$EMAIL" -host="$HOST" -ca="$CA"
+    else
+        echo + caddy -conf=/etc/Caddyfile -agree=true -email="$EMAIL" -host="$HOST"
+        caddy -conf=/etc/Caddyfile -agree=true -email="$EMAIL" -host="$HOST"
+    fi
+    echo "Retrying in 5 seconds..."
+    sleep 5
+done

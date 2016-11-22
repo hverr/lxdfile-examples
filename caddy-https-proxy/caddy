@@ -1,0 +1,30 @@
+#!/sbin/openrc-run
+
+name="caddy"
+
+LOG=/var/log/caddy.log
+
+start() {
+    ebegin "Starting caddy"
+    start-stop-daemon \
+        --background \
+        --start \
+        --exec /usr/local/bin/caddy_start \
+        --make-pidfile \
+        --pidfile /var/run/caddy.pid \
+        -1 $LOG -2 $LOG
+    eend $?
+}
+
+stop() {
+    ebegin "Stopping caddy"
+    start-stop-daemon --stop \
+        --exec /usr/local/bin/caddy_start \
+        --pidfile /var/run/caddy.pid
+    eend $?
+}
+
+depend() {
+    need net
+    need localmount
+}
