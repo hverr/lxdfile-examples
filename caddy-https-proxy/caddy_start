@@ -12,7 +12,7 @@ function die() {
 [ -n "$BACKEND" ] || die "BACKEND not set"
 [ -n "$PORT" ]    || die "PORT not set"
 
-[ -n "$ENABLE_WWW" ] && L1="$HOST, www.$HOST" || L1="$HOST"
+[ "$ENABLE_WWW" = yes ] && L1="$HOST, www.$HOST" || L1="$HOST"
 
 cat > /etc/Caddyfile <<EOF
 $L1 {
@@ -27,7 +27,7 @@ EOF
 echo "Starting caddy for $L1 ($EMAIL)"
 
 while true; do
-    if [ -n "$STAGING" ]; then
+    if [ "$STAGING" = yes ]; then
         CA="https://acme-staging.api.letsencrypt.org/directory"
         echo + caddy -conf=/etc/Caddyfile -agree=true -email="$EMAIL" -host="$HOST" -ca="$CA"
         caddy -conf=/etc/Caddyfile -agree=true -email="$EMAIL" -host="$HOST" -ca="$CA"
