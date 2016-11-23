@@ -1,0 +1,16 @@
+# Example configuration file
+RUN apt-get install -y openssl
+
+ENV USER user
+ENV DATABASE "$USER"
+
+RUN PWD=$(openssl rand -base64 16) && \
+    mysql -uroot -proot -e "\
+        CREATE USER '$USER'@'localhost' IDENTIFIED BY '$PWD'       ; \
+        CREATE USER '$USER'@'%'         IDENTIFIED BY '$PWD'       ; \
+        CREATE DATABASE $DATABASE                                  ; \
+        GRANT ALL PRIVILEGES ON $DATABASE.* TO '$USER'@'localhost' ; \
+        GRANT ALL PRIVILEGES ON $DATABASE.* TO '$USER'@'%'         ; \
+        FLUSH PRIVILEGES                                           ; \
+    " && \
+    echo "Password for $USER: $PWD"

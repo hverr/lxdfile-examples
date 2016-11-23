@@ -1,0 +1,19 @@
+FROM ubuntu/yakkety
+DESCRIPTION MySQL Community Server
+
+# Auto updates
+RUN apt-get install -y \
+    unattended-upgrades \
+    apt-listchanges
+
+# Install
+ENV DEBIAN_FRONTEND=noninteractive
+RUN echo mysql-server mysql-server/root_password password root | debconf-set-selections
+RUN echo mysql-server mysql-server/root_password_again password root | debconf-set-selections
+RUN apt-get install -y mysql-server
+
+# Configure
+RUN sed -i 's/^bind-address.*$/bind-address = 0.0.0.0/' /etc/mysql/mysql.conf.d/mysqld.cnf
+
+# Volumes
+VOLUME /var/lib/mysql
