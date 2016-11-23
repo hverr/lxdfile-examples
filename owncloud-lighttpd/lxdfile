@@ -1,0 +1,43 @@
+FROM ubuntu/yakkety
+DESCRIPTION ownCloud/lighttpd
+
+
+# Auto updates
+RUN apt-get install -y \
+    unattended-upgrades \
+    apt-listchanges
+
+# Dependencies
+RUN apt-get install -y \
+    bzip2 \
+    ca-certificates \
+    curl \
+    lighttpd \
+    tar
+
+RUN apt-get install -y \
+    php7.0-bz2 \
+    php7.0-cgi \
+    php7.0-curl \
+    php7.0-gd \
+    php7.0-mbstring \
+    php7.0-mysql \
+    php7.0-xml \
+    php7.0-zip
+
+# Set up www
+ENV TAR     owncloud-9.1.2.tar.bz2
+ENV URL     https://download.owncloud.org/community/$TAR
+RUN mkdir -p /var/www/public/owncloud && \
+    curl -L "$URL" | tar -jxf - -C /var/www/public && \
+    chown -R www-data:www-data /var/www/public/owncloud && \
+    mkdir -p /home/owncloud/data && \
+    chown -R www-data:www-data /home/owncloud
+
+# Configure lighttpd
+COPY owncloud.conf /etc/lighttpd/conf-available/20-owncloud.conf
+RUN lighty-enable-mod owncloud fastcgi accesslog && \
+    mkdir -p /var/run/lighttpd && \
+    chown www-data:www-data /var/run/lighttpd
+
+VOLUME ["/var/www/public/owncloud", "/home/owncloud"]
