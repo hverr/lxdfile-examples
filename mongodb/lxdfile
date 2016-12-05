@@ -14,8 +14,11 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927 && \
     apt-get update && \
     apt-get install -y mongodb-org
 
-COPY mongodb.service /etc/systemd/system/mongodb.service
+# Configure
+RUN sed -ire 's/^\( *\)bindIp:.*$/\1bindIp: 0.0.0.0/g' /etc/mongod.conf
 
+# SystemD
+COPY mongodb.service /etc/systemd/system/mongodb.service
 RUN systemctl enable mongodb.service
 
 VOLUME ["/etc/mongod.conf"]
