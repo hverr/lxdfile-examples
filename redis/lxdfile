@@ -1,0 +1,31 @@
+FROM ubuntu/xenial
+DESCRIPTION Redis In-Memory Data Store (stable, built from source)
+
+# Auto updates
+RUN apt-get install -y \
+    unattended-upgrades \
+    apt-listchanges
+
+# Dependencies
+RUN apt-get install -y build-essential tcl tar
+
+# Build
+CD /tmp
+RUN curl -OL http://download.redis.io/redis-stable.tar.gz && \
+    tar xzvf redis-stable.tar.gz && \
+    cd redis-stable && \
+    make && \
+    make install && \
+    mkdir -p /etc/redis /var/lib/redis && \
+    cp redis.conf /etc/redis/redis.conf && \
+    sed -ire 's/^supervised.*$/supervised systemd/g' /etc/redis/redis.conf && \
+    sed -ire 's_^dir.*$_dir /var/lib/redis_g' /etc/redis/redis.conf && \
+    adduser --system --group --no-create-home redis && \
+    chown -R redis:redis /var/lib/redis && \
+    chmod 0770 /var/lib/redis
+
+# SystemD
+COPY redis.service /etc/systemd/system/redis.service
+RUN systemctl enable redis.service
+
+VOLUME ["/etc/redis"]
