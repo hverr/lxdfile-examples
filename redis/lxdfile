@@ -7,7 +7,7 @@ RUN apt-get install -y \
     apt-listchanges
 
 # Dependencies
-RUN apt-get install -y build-essential tcl tar
+RUN apt-get install -y build-essential tcl tar curl
 
 # Build
 CD /tmp
