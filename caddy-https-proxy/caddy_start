@@ -14,9 +14,15 @@ function die() {
 
 [ "$ENABLE_WWW" = yes ] && L1="$HOST, www.$HOST" || L1="$HOST"
 
+if [ "$WEBSOCKETS" = yes ]; then
+    WS=websocket
+    HTTP2="-http2=false"
+fi
+
 cat > /etc/Caddyfile <<EOF
 $L1 {
     proxy / $BACKEND:$PORT {
+        $WS
         header_upstream Host {host}
         header_upstream X-Real-IP {remote}
         header_upstream X-Forwarded-Proto {scheme}
@@ -29,11 +35,11 @@ echo "Starting caddy for $L1 ($EMAIL)"
 while true; do
     if [ "$STAGING" = yes ]; then
         CA="https://acme-staging.api.letsencrypt.org/directory"
-        echo + caddy -conf=/etc/Caddyfile -agree=true -email="$EMAIL" -host="$HOST" -ca="$CA"
-        caddy -conf=/etc/Caddyfile -agree=true -email="$EMAIL" -host="$HOST" -ca="$CA"
+        echo + caddy -conf=/etc/Caddyfile -agree=true -email="$EMAIL" -host="$HOST" -ca="$CA" $HTTP2
+        caddy -conf=/etc/Caddyfile -agree=true -email="$EMAIL" -host="$HOST" -ca="$CA" $HTTP2
     else
-        echo + caddy -conf=/etc/Caddyfile -agree=true -email="$EMAIL" -host="$HOST"
-        caddy -conf=/etc/Caddyfile -agree=true -email="$EMAIL" -host="$HOST"
+        echo + caddy -conf=/etc/Caddyfile -agree=true -email="$EMAIL" -host="$HOST" $HTTP2
+        caddy -conf=/etc/Caddyfile -agree=true -email="$EMAIL" -host="$HOST" $HTTP2
     fi
     echo "Retrying in 5 seconds..."
     sleep 5

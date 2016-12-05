@@ -7,6 +7,7 @@ exit 1
 
 STAGING=yes
 ENABLE_WWW=no
+WEBSOCKETS=no
 
 EMAIL=
 HOST=
