@@ -29,3 +29,6 @@ COPY redis.service /etc/systemd/system/redis.service
 RUN systemctl enable redis.service
 
 VOLUME ["/etc/redis"]
+
+# Clean
+RUN rm -rf /tmp/*
