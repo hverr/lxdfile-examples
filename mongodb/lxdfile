@@ -1,0 +1,21 @@
+FROM ubuntu/xenial
+DESCRIPTION MongoDB
+
+ENV VERSION 3.2
+
+# Auto updates
+RUN apt-get install -y \
+    unattended-upgrades \
+    apt-listchanges
+
+# Install
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927 && \
+    echo "deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/$VERSION multiverse" > /etc/apt/sources.list.d/mongodb.list && \
+    apt-get update && \
+    apt-get install -y mongodb-org
+
+COPY mongodb.service /etc/systemd/system/mongodb.service
+
+RUN systemctl enable mongodb.service
+
+VOLUME ["/etc/mongod.conf"]
