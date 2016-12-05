@@ -20,6 +20,7 @@ RUN curl -OL http://download.redis.io/redis-stable.tar.gz && \
     cp redis.conf /etc/redis/redis.conf && \
     sed -ire 's/^supervised.*$/supervised systemd/g' /etc/redis/redis.conf && \
     sed -ire 's_^dir.*$_dir /var/lib/redis_g' /etc/redis/redis.conf && \
+    sed -ire 's/^bind.*$_bind 0.0.0.0_g' /etc/redis/redis.conf && \
     adduser --system --group --no-create-home redis && \
     chown -R redis:redis /var/lib/redis && \
     chmod 0770 /var/lib/redis
