@@ -1,0 +1,22 @@
+FROM alpine/3.4
+DESCRIPTION Easy-RSA v3 Certificate Authority
+
+# Community repostiory
+RUN echo "http://dl-3.alpinelinux.org/alpine/v3.4/community" >> /etc/apk/repositories
+RUN apk update
+
+# Packages
+RUN apk add \
+    bash \
+    easy-rsa
+
+# Setup
+RUN cd /usr/share/easy-rsa && ./easyrsa init-pki
+
+# Default directory
+RUN echo "cd /usr/share/easy-rsa" > /root/.bashrc
+
+# Volumes
+VOLUME ["/usr/share/easy-rsa/openssl-1.0.cnf"]
+VOLUME ["/usr/share/easy-rsa/pki"]
+VOLUME ["/usr/share/easy-rsa/x509-types"]

@@ -1,0 +1,1 @@
+COPY openvpn.conf /etc/openvpn/openvpn.conf

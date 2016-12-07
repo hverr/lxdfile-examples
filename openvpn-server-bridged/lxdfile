@@ -1,0 +1,23 @@
+FROM alpine/3.4
+DESCRIPTION OpenVPN Server (bridged)
+
+# Community repostiory
+RUN echo "http://dl-3.alpinelinux.org/alpine/v3.4/community" >> /etc/apk/repositories
+RUN apk update
+
+# Packages
+RUN apk add \
+    bash \
+    bridge \
+    easy-rsa \
+    openvpn
+
+# Keys
+CD /usr/share/easy-rsa
+RUN ./easyrsa init-pki
+
+# Configuration
+COPY openvpn.conf /etc/openvpn/openvpn.conf
+
+# Change directory
+RUN echo "cd /usr/share/easy-rsa" > /root/.bashrc

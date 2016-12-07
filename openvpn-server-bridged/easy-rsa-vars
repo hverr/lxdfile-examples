@@ -1,0 +1,5 @@
+if [ -z "$EASYRSA_CALLER" ]; then
+    echo "You appear to be sourcing an Easy-RSA 'vars' file." >&2
+    echo "This is no longer necessary and is disallowed." >&2
+    return 1
+fi

@@ -1,0 +1,3 @@
+RUN mkdir -p /etc/openvpn/certs/
+COPY server-ca.crt /etc/openvpn/certs/
+COPY server-cert.crt /etc/openvpn/certs/
