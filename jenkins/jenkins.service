@@ -1,0 +1,14 @@
+[Unit]
+Description=Jenkins CI
+After=network.target
+
+[Service]
+User=jenkins
+Group=jenkins
+Environment=HOME=/var/lib/jenkins
+Environement=JENKINS_HOME=/var/lib/jenkins
+WorkingDirectory=/var/lib/jenkins
+ExecStart=/usr/bin/java -jar /usr/share/jenkins/jenkins.war
+
+[Install]
+WantedBy=multi-user.target

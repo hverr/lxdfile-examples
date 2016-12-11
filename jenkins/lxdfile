@@ -1,0 +1,22 @@
+FROM oracle-java
+DESCRIPTION Jenkins CI
+
+# Dependencies
+RUN apt-get install -y \
+    curl \
+    wget \
+    git
+
+# Install Jenkins
+RUN wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | apt-key add - && \
+    sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list' && \
+    apt-get update && \
+    apt-get install -y jenkins
+RUN adduser --system jenkins
+VOLUME ["/var/lib/jenkins"]
+RUN echo "JENKINS_HOME=/var/lib/jenkins" >> /etc/environment && \
+    chown -R jenkins:jenkins /var/lib/jenkins
+
+# SystemD
+COPY jenkins.service /etc/systemd/system/jenkins.service
+RUN systemctl enable jenkins
