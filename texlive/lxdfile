@@ -1,0 +1,25 @@
+FROM ubuntu/yakkety
+DESCRIPTION TeX Live (basic scheme)
+
+RUN apt-get install -y \
+    curl
+
+# TeX Live
+CD /root
+RUN curl -OL http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz && \
+    mkdir install-tl && \
+    tar -xvf install-tl-unx.tar.gz -C install-tl --strip-components=1
+
+CD /root/install-tl
+COPY texlive.profile ./
+RUN echo 'PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/local/texlive/2016/bin"' > /etc/environment
+RUN ./install-tl --profile=texlive.profile
+CD /root
+RUN rm -rf install-tl install-tl-unx.tar.gz
+
+# TeXMaker
+CD /root
+ENV DEB texmaker_ubuntu_16.04_4.5_amd64.deb
+RUN curl -OL http://www.xm1math.net/texmaker/$DEB && \
+    dpkg -i $DEB || apt-get install -y -f && dpkg -i $DEB && \
+    rm $DEB
