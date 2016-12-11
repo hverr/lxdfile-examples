@@ -12,7 +12,7 @@ RUN curl -OL http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz 
 
 CD /root/install-tl
 COPY texlive.profile ./
-RUN echo 'PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/local/texlive/2016/bin"' > /etc/environment
+RUN echo 'PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/local/texlive/2016/bin/x86_64-linux"' > /etc/environment
 RUN ./install-tl --profile=texlive.profile
 CD /root
 RUN rm -rf install-tl install-tl-unx.tar.gz
