@@ -2,7 +2,9 @@ FROM ubuntu/yakkety
 DESCRIPTION TeX Live (basic scheme)
 
 RUN apt-get install -y \
-    curl
+    curl \
+    perl \
+    wget
 
 # TeX Live
 CD /root
