@@ -4,15 +4,16 @@ DESCRIPTION Jenkins CI
 # Dependencies
 RUN apt-get install -y \
     curl \
-    wget \
-    git
+    git \
+    openssh-client \
+    wget
 
 # Install Jenkins
-RUN wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | apt-key add - && \
-    sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list' && \
-    apt-get update && \
-    apt-get install -y jenkins
-RUN adduser --system jenkins
+RUN curl -OL http://mirrors.jenkins.io/war-stable/latest/jenkins.war && \
+    mkdir -p /opt/jenkins && \
+    mv jenkins.war /opt/jenkins/ && \
+    mkdir -p /var/lib/jenkins
+RUN adduser --system --no-create-home --group jenkins
 VOLUME ["/var/lib/jenkins"]
 RUN echo "JENKINS_HOME=/var/lib/jenkins" >> /etc/environment && \
     chown -R jenkins:jenkins /var/lib/jenkins

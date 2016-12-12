@@ -6,9 +6,9 @@ After=network.target
 User=jenkins
 Group=jenkins
 Environment=HOME=/var/lib/jenkins
-Environement=JENKINS_HOME=/var/lib/jenkins
+Environment=JENKINS_HOME=/var/lib/jenkins
 WorkingDirectory=/var/lib/jenkins
-ExecStart=/usr/bin/java -jar /usr/share/jenkins/jenkins.war
+ExecStart=/usr/bin/java -jar /opt/jenkins/jenkins.war
 
 [Install]
 WantedBy=multi-user.target
