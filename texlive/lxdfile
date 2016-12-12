@@ -18,10 +18,3 @@ RUN echo 'PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/us
 RUN ./install-tl --profile=texlive.profile
 CD /root
 RUN rm -rf install-tl install-tl-unx.tar.gz
-
-# TeXMaker
-CD /root
-ENV DEB texmaker_ubuntu_16.04_4.5_amd64.deb
-RUN curl -OL http://www.xm1math.net/texmaker/$DEB && \
-    dpkg -i $DEB || apt-get install -y -f && dpkg -i $DEB && \
-    rm $DEB
