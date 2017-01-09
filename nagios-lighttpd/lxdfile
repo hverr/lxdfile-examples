@@ -9,7 +9,7 @@ RUN apt-get install -y \
     unzip
 
 # Nagios
-ENV VERSION 4.2.3
+ENV VERSION 4.2.4
 ENV TAR     nagios-$VERSION.tar.gz
 ENV URL     https://github.com/NagiosEnterprises/nagioscore/releases/download/release-$VERSION/$TAR
 
