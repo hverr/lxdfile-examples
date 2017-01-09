@@ -1,0 +1,4 @@
+RUN mkdir -p /etc/nagios && \
+    chmod 0770 /etc/nagios && \
+    chown www-data:www-data /etc/nagios
+COPY passwd /etc/nagios/passwd

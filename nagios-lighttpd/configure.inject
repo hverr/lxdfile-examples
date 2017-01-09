@@ -1,4 +1,4 @@
-RUN mkdir -p /etc/nagios && \
-    chmod 0770 /etc/nagios && \
-    chown www-data:www-data /etc/nagios
-COPY passwd /etc/nagios/passwd
+RUN rm -rf /usr/local/nagios/etc
+COPY etc /usr/local/nagios/etc
+RUN systemctl restart nagios.service
+RUN systemctl status nagios.service
