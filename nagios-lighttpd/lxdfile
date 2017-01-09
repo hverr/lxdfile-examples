@@ -1,0 +1,66 @@
+FROM ubuntu/yakkety
+DESCRIPTION Nagios Core (lighttpd)
+
+RUN apt-get install -y \
+    ca-certificates \
+    curl \
+    gettext \
+    lighttpd \
+    unzip
+
+# Nagios
+ENV VERSION 4.2.3
+ENV TAR     nagios-$VERSION.tar.gz
+ENV URL     https://github.com/NagiosEnterprises/nagioscore/releases/download/release-$VERSION/$TAR
+
+ENV PLUGIN_VERSION 2.1.4
+ENV PLUGIN_TAR      release-$PLUGIN_VERSION.tar.gz
+ENV PLUGIN_URL      https://github.com/nagios-plugins/nagios-plugins/archive/$PLUGIN_TAR
+
+RUN apt-get install -y \
+    autoconf \
+    gcc \
+    make
+
+RUN curl -OL $URL && tar -xvf $TAR && \
+    curl -OL $PLUGIN_URL && tar -xvf $PLUGIN_TAR
+
+RUN cd nagios-$VERSION && \
+    useradd -m -s /bin/bash nagios && \
+    groupadd nagcmd && \
+    usermod -a -G nagcmd nagios && \
+    usermod -a -G nagcmd www-data && \
+    ./configure --prefix=/usr/local/nagios --with-command-group=nagcmd && \
+    make all -j$(nproc) && \
+    make install && \
+    make install-init && \
+    make install-config && \
+    make install-commandmode
+
+RUN cd nagios-plugins-release-$PLUGIN_VERSION && \
+    ./tools/setup && \
+    ./configure && \
+    make -j$(nproc) && \
+    make install
+
+# Lighttpd
+RUN apt-get install -y \
+    php7.0-cgi
+COPY nagios.conf /etc/lighttpd/conf-available/20-nagios.conf
+RUN lighty-enable-mod nagios fastcgi accesslog && \
+    mkdir -p /var/run/lighttpd && \
+    chown www-data:www-data /var/run/lighttpd
+
+# Services
+RUN systemctl daemon-reload && \
+    systemctl enable nagios && \
+    systemctl enable lighttpd
+
+
+# Clean up
+RUN apt-get autoremove -y \
+    autoconf \
+    gcc \
+    make
+RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
+    rm -rf nagios-$VERSION nagios-plugins-release-$PLUGIN_VERSION
