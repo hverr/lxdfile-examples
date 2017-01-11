@@ -63,4 +63,5 @@ RUN apt-get autoremove -y \
     gcc \
     make
 RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
-    rm -rf nagios-$VERSION nagios-plugins-release-$PLUGIN_VERSION
+    rm -rf nagios-$VERSION nagios-plugins-release-$PLUGIN_VERSION && \
+    rm -rf $PLUGIN_TAR $TAR
