@@ -43,6 +43,12 @@ RUN cd nagios-plugins-release-$PLUGIN_VERSION && \
     make -j$(nproc) && \
     make install
 
+# SMTP
+ENV SMTP_SEND_VERSION v1
+ENV SMTP_SEND_URL     https://github.com/hverr/go-smtp-send/releases/download/$SMTP_SEND_VERSION/go-smtp-send_linux_amd64
+RUN curl -L "$SMTP_SEND_URL" -o /usr/local/nagios/libexec/go-smtp-send && \
+    chmod 0755 /usr/local/nagios/libexec/go-smtp-send
+
 # Lighttpd
 RUN apt-get install -y \
     php7.0-cgi
