@@ -1,8 +1,8 @@
-FROM alpine/3.4
-DESCRIPTION Alpine with Go 1.7.5
+FROM ubuntu/yakkety
+DESCRIPTION Go 1.7.5
 
 # Dependencies
-RUN apk add \
+RUN apt-get install -y \
     bash \
     ca-certificates \
     curl \
@@ -11,8 +11,8 @@ RUN apk add \
 
 # Configure
 RUN mkdir -p /usr/share/go/src
-RUN echo "GOPATH=/usr/share/go"     >> /usr/share/go/environment
-RUN echo 'PATH=$PATH:/usr/local/go/bin' >> /usr/share/go/environment
+RUN sed -i 's_PATH=\(.*\)_PATH=\1:/usr/local/go/bin_g' /etc/environment
+RUN echo "GOPATH=/usr/share/go" >> /etc/environment
 
 # Install
 ENV VERSION 1.7.5
