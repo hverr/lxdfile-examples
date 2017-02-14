@@ -1,0 +1,20 @@
+FROM alpine/3.4
+DESCRIPTION Alpine with Go 1.7.5
+
+# Dependencies
+RUN apk add \
+    bash \
+    ca-certificates \
+    curl \
+    sed \
+    tar
+
+# Configure
+RUN mkdir -p /usr/share/go/src
+RUN echo "GOPATH=/usr/share/go"     >> /usr/share/go/environment
+RUN echo 'PATH=$PATH:/usr/local/go/bin' >> /usr/share/go/environment
+
+# Install
+ENV VERSION 1.7.5
+ENV URL     https://storage.googleapis.com/golang/go${VERSION}.linux-amd64.tar.gz
+RUN curl -L "$URL" | tar -xzf - -C /usr/local
