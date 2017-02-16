@@ -1,0 +1,56 @@
+FROM ubuntu/yakkety/amd64
+DESCRIPTION Gitea - Go Git Service
+
+# Dependencies
+RUN apt-get install -y \
+    unattended-upgrades \
+    apt-listchanges
+
+RUN apt-get install -y \
+    ca-certificates \
+    curl \
+    git \
+    openssh-server
+
+# Gogs
+ENV VERSION 1.0.1
+ENV BINARY  gitea-${VERSION}-linux-amd64
+ENV URL     https://github.com/go-gitea/gitea/releases/download/v${VERSION}/${BINARY}
+
+CD /tmp
+RUN mkdir -p /opt/gitea && \
+    mkdir -p /opt/gitea/custom && \
+    mkdir -p /opt/gitea/data
+RUN curl -L "$URL" -o /opt/gitea/gitea && \
+    chmod 0755 /opt/gitea/gitea
+
+VOLUME /opt/gitea/custom
+VOLUME /opt/gitea/data
+
+# User
+RUN mkdir -p /home/git
+VOLUME /home/git
+RUN adduser \
+    --shell /bin/bash \
+    --home /home/git \
+    --gecos "" \
+    --disabled-password \
+    git
+RUN chown -R git:git /home/git
+RUN chown -R git:git /opt/gitea
+
+# SSH
+RUN rm /etc/ssh/ssh_host_rsa_key /etc/ssh/ssh_host_rsa_key.pub
+RUN rm /etc/ssh/ssh_host_ecdsa_key /etc/ssh/ssh_host_ecdsa_key.pub
+RUN ssh-keygen -f /etc/ssh/ssh_host_rsa_key -t rsa -b 4096 -N ''
+RUN ssh-keygen -f /etc/ssh/ssh_host_ecdsa_key -t ecdsa -b 521 -N ''
+COPY sshd_config /etc/ssh/sshd_config
+RUN mkdir -p /var/run/sshd
+
+VOLUME /etc/ssh/
+
+# SystemD
+COPY gitea.service /etc/systemd/system/
+RUN systemctl daemon-reload
+RUN systemctl enable ssh.service
+RUN systemctl enable gitea.service

@@ -1,0 +1,13 @@
+[Unit]
+Description=Gitea - Go Git Service
+After=network.target
+
+[Service]
+User=git
+Group=git
+Environment=HOME=/home/git
+WorkingDirectory=/opt/gitea
+ExecStart=/opt/gitea/gitea web
+
+[Install]
+WantedBy=multi-user.target
