@@ -1,0 +1,24 @@
+FROM oracle-java
+DESCRIPTION SonarQube
+
+# Auto updates
+RUN apt-get install -y \
+    unattended-upgrades \
+    apt-listchanges
+
+# Dependencies
+RUN apt-get install -y \
+    unzip \
+    zip
+
+# Install
+ENV ZIP sonarqube-6.2.zip
+ENV URL https://sonarsource.bintray.com/Distribution/sonarqube/${ZIP}
+RUN curl -L "$URL" -o /root/$ZIP && \
+    mkdir -p /opt/sonarqube && \
+    unzip /root/$ZIP -d /opt/sonarqube/ && \
+    rm -v /root/$ZIP
+
+# SystemD
+COPY sonar.service /etc/systemd/system/sonar.service
+RUN systemctl daemon-reload

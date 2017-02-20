@@ -1,0 +1,2 @@
+COPY sonar.properties /opt/sonarqube/sonarqube-6.2/conf/sonar.properties
+RUN systemctl restart sonar.service

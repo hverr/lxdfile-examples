@@ -1,0 +1,15 @@
+[Unit]
+Description=SonarQube
+After=network.target network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/opt/sonar/sonarqube-6.2/bin/linux-x86-64/sonar.sh start
+ExecStop=/opt/sonar/sonarqube-6.2/bin/linux-x86-64/sonar.sh stop
+ExecReload=/opt/sonar/sonarqube-6.2/bin/linux-x86-64/sonar.sh restart
+PIDFile=/opt/sonar/sonarqube-6.2/bin/linux-x86-64/./SonarQube.pid
+Type=forking
+
+
+[Install]
+WantedBy=multi-user.target
