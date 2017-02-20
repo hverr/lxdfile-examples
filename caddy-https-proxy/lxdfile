@@ -2,6 +2,7 @@ FROM alpine/3.4
 DESCRIPTION caddy - HTTPS forward proxy
 
 # Dependencies
+RUN apk update
 RUN apk add \
     bash \
     ca-certificates \
