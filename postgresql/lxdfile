@@ -1,0 +1,12 @@
+FROM ubuntu/yakkety
+DESCRIPTION PostgreSQL
+
+# Auto updates
+RUN apt-get install -y \
+    unattended-upgrades \
+    apt-listchanges
+
+# Installation
+RUN apt-get install -y \
+    postgresql \
+    postgresql-contrib

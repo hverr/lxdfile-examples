@@ -1,0 +1,24 @@
+# Configure
+ENV ROLE      role
+ENV DATABASE  $ROLE
+ENV CLIENT_IP 192.168.100.0/24
+
+# Create user
+RUN PWD=$(openssl rand -base64 16) && \
+    sudo -u postgres psql -c "\
+        CREATE ROLE $ROLE WITH \
+            LOGIN \
+            ENCRYPTED PASSWORD '$PWD' \
+        " && \
+    sudo -u postgres createdb $DATABASE --owner=$ROLE && \
+    echo "====================================" && \
+    echo "Password for $ROLE: $PWD" && \
+    echo "===================================="
+
+# Allow network access
+ENV CONFIG_DIR /etc/postgresql/9.5/main
+RUN echo "host $DATABASE $ROLE $CLIENT_IP md5" >> $CONFIG_DIR/pg_hba.conf
+RUN echo "listen_addresses = '*'" >> $CONFIG_DIR/postgresql.conf
+
+# Restart
+RUN systemctl restart postgresql
