@@ -1,0 +1,8 @@
+FROM alpine/3.4
+DESCRIPTION Lighttpd Static Web Server
+
+RUN apk update && \
+    apk add lighttpd && \
+    rc-update add lighttpd default
+
+COPY lighttpd.conf /etc/lighttpd/lighttpd.conf
