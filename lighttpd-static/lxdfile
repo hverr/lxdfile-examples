@@ -5,4 +5,6 @@ RUN apk update && \
     apk add lighttpd && \
     rc-update add lighttpd default
 
+VOLUME /var/www/localhost
+
 COPY lighttpd.conf /etc/lighttpd/lighttpd.conf
