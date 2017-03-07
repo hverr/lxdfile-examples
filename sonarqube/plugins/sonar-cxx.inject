@@ -1,0 +1,6 @@
+ENV CXX_VERSION 0.9.7
+ENV CXX_JAR     sonar-cxx-plugin-${CXX_VERSION}.jar
+ENV CXX_URL     https://github.com/SonarOpenCommunity/sonar-cxx/releases/download/cxx-${CXX_VERSION}/${CXX_JAR}
+
+RUN curl -L "${CXX_URL}" -o /opt/sonarqube/sonarqube-6.2/extensions/plugins/${CXX_JAR}
+RUN systemctl restart sonar.service
