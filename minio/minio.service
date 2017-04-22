@@ -1,0 +1,10 @@
+[Unit]
+Description=Minio Object Store
+After=network.target
+
+[Service]
+ExecStartPre=mkdir -p /var/lib/minio/data
+ExecStart=/usr/local/bin/minio server /var/lib/minio/data
+
+[Install]
+WantedBy=multi-user.target

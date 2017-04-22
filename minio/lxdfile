@@ -1,0 +1,17 @@
+FROM ubuntu/yakkety
+DESCRIPTION Minio Object Store
+
+
+RUN apt-get update && apt-get install -y \
+    ca-certificates \
+    curl
+
+ENV BINARY minio.RELEASE.2017-03-16T21-50-32Z
+ENV URL    https://dl.minio.io/server/minio/release/linux-amd64/archive/${BINARY}
+RUN curl -L ${URL} -o /usr/local/bin/minio && \
+    chmod 0755 /usr/local/bin/minio
+
+COPY minio.service /etc/systemd/system/minio.service
+RUN systemctl enable minio.service
+
+RUN rm -rf /var/lib/apt/lists/*
