@@ -5,9 +5,8 @@ RUN apt-get install -y \
     ca-certificates \
     curl
 
-ENV VERSION 8u131
-ENV MINOR b11
-RUN curl -L --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/$VERSION-$MINOR/jdk-$VERSION-linux-x64.tar.gz -o oracle-java8.tgz
+RUN curl -L --header "Cookie: oraclelicense=accept-securebackup-cookie" \
+    http://download.oracle.com/otn-pub/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/jdk-8u131-linux-x64.tar.gz
 
 RUN mkdir -p /opt/jdk && \
     tar -xvf oracle-java8.tgz -C /opt/jdk --strip-components=1 && \
