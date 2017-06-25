@@ -13,7 +13,7 @@ RUN apt-get install -y \
     openssh-server
 
 # Gogs
-ENV VERSION 1.0.1
+ENV VERSION 1.1.2
 ENV BINARY  gitea-${VERSION}-linux-amd64
 ENV URL     https://github.com/go-gitea/gitea/releases/download/v${VERSION}/${BINARY}
 
