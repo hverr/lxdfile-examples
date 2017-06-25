@@ -1,4 +1,4 @@
-FROM ubuntu/yakkety/amd64
+FROM ubuntu/xenial
 DESCRIPTION Gitea - Go Git Service
 
 # Dependencies
