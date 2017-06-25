@@ -1,4 +1,4 @@
-FROM ubuntu/yakkety
+FROM ubuntu/xenial
 DESCRIPTION Oracle Java SE Development Kit
 
 RUN apt-get install -y \
