@@ -1,4 +1,4 @@
-FROM ubuntu/xenial
+FROM ubuntu/zesty
 DESCRIPTION Gitea - Go Git Service
 
 # Dependencies
