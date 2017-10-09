@@ -1,4 +1,4 @@
-FROM ubuntu/yakkety
+FROM ubuntu/xenial
 DESCRIPTION TeX Live (basic scheme)
 
 RUN apt-get install -y \

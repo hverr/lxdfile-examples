@@ -3,7 +3,7 @@ DESCRIPTION TeXMaker with TeX Live (basic scheme)
 
 # TeXMaker
 CD /root
-ENV DEB texmaker_ubuntu_16.04_4.5_amd64.deb
-RUN curl -OL http://www.xm1math.net/texmaker/$DEB && \
+ENV DEB texmaker_5.0_ubuntu_17_04_amd64.deb
+RUN curl -OL http://www.xm1math.net/texmaker/assets/files/$DEB && \
     dpkg -i $DEB || apt-get install -y -f && dpkg -i $DEB && \
     rm $DEB
